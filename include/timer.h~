@@ -1,8 +1,0 @@
-#ifndef TIMER_H
-#define TIMER_H
-
-#include <common.h>
-
-uint64_t timer_ticks = 0;
-
-#endif
