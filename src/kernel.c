@@ -85,12 +85,30 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
  
 void terminal_putchar(char c)
 {
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == VGA_WIDTH)
+	if (c == 10)
 	{
 		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+	}
+
+	else
+	{
+		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+		if (++terminal_column == VGA_WIDTH)
+		{
+			terminal_column = 0;
+		}
+	}
+
+	if (++terminal_row == VGA_HEIGHT)
+	{
+		for (uint32_t y = 0; y < VGA_HEIGHT - 1; y++)
+		{
+			for (uint32_t x = 0; x <= VGA_WIDTH; x++)
+			{
+				terminal_buffer[y * VGA_WIDTH + x] = terminal_buffer[(y+1) * VGA_WIDTH + x];
+			}
+		}
+		terminal_row--;
 	}
 }
 
@@ -135,8 +153,6 @@ void terminal_writestring(const char* data)
 
 uint32_t memupper_size;
 extern uint32_t endkernel;
-extern uint32_t sbss;
-extern uint32_t ebss;
 
 void kernel_main(multiboot_info_t* mbd, unsigned int magic)
 {
@@ -149,12 +165,16 @@ void kernel_main(multiboot_info_t* mbd, unsigned int magic)
 		memupper_size = mbd->mem_upper;
 	}
 
+	terminal_writestring("INITIALIZING GDT");
 	gdt_install();
+	terminal_writestring("INITIALIZING IDT");
 	idt_install();
 	timer_install();
 	keyboard_install();
+	terminal_writestring("INITIALIZING IRQ");
 	irq_install();
         set_typematic(0b01100000);
+	terminal_writestring("INITIALIZING MEMORY MANAGER");
 	init_paging(0x100000);//4 GB
 
 	__asm__ __volatile__ ("sti");
