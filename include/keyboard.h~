@@ -1,0 +1,27 @@
+#ifndef KEYBOARD_H
+#define KEYBOARD_H
+
+#include <common.h>
+#include <irq.h>
+
+unsigned char keyboard_table_uk[128];
+
+uint8_t scancode;
+
+struct key_status {
+	bool SHIFT;
+	bool ALT;
+	bool CTL;
+	bool NUMLOCK;
+	bool SCROLLLOCK;
+	bool CAPSLOCK
+};
+
+void keyboard_handler(struct regs *r);
+
+void keyboard_install();
+void keyboard_uninstall();
+
+void get_scancode();
+
+#endif

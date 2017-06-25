@@ -1,4 +1,4 @@
-GCCPARAMS = -std=gnu99 -ffreestanding -O2 -static-libgcc -lgcc -Iinclude
+GCCPARAMS = -std=gnu99 -ffreestanding  -static-libgcc -lgcc -Iinclude
 
 objects = obj/boot.o \
 	obj/gdt.o \
@@ -13,7 +13,9 @@ objects = obj/boot.o \
 	obj/mm/frames.o \
 	obj/mm/paging.o \
 	obj/mm/enable_paging.o \
-	obj/mm/heap.o
+	obj/mm/heap.o \
+	obj/tasks/task.o \
+	obj/tasks/switch.o \
 
 obj/%.o: src/%.c
 	mkdir -p $(@D)
@@ -22,6 +24,10 @@ obj/%.o: src/%.c
 obj/%.o: src/%.asm
 	mkdir -p $(@D)
 	nasm -felf32 -o $@ $<
+
+obj/%.o: src/%.s
+	mkdir -p $(@D)
+	/opt/cross/bin/i686-elf-gcc $(GCCPARAMS) -c -o $@ $<
 
 os.bin: linker.ld $(objects)
 	/opt/cross/bin/i686-elf-gcc -T linker.ld -o os.bin -ffreestanding -O2 -nostdlib $(objects)

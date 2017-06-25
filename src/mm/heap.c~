@@ -21,12 +21,9 @@ void *kmalloc(size_t size)
 
 	for (tmp; tmp != NULL && result == NULL; tmp = tmp->next)
 	{
-		if (tmp->used == false && tmp->size > size)
+		if (tmp->used == false && tmp->size >= size)
 			result = tmp;
 	}
-
-	if (result == 0)
-		return 0;
 
 	if (result->size >= size + sizeof(struct mem_block) + 1)
 	{

@@ -6,10 +6,7 @@ void timer_handler(struct regs *r)
 {
 	static uint32_t timer_ticks = 0;
 	if (++timer_ticks % 18 == 0)
-	{
 	        terminal_writestring("A second passed");
-		//preempt();
-	}
 }
 
 void timer_install()

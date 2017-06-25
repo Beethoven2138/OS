@@ -3,7 +3,6 @@
 
 #include <common.h>
 #include <irq.h>
-#include <tasks/task.h>
 
 void timer_handler(struct regs *r);
 void timer_install();

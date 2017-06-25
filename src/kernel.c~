@@ -188,15 +188,15 @@ void kernel_main(multiboot_info_t* mbd, unsigned int magic)
 
 	gdt_install();
 	idt_install();
-	
-	timer_install();
+	//timer_install();
 	keyboard_install();
 	irq_install();
-        set_typematic(0b01100000);
+        //set_typematic(0b01100000);
 	init_paging(0x100000);//4 GB
 
-	__asm__ __volatile__ ("sti");
 	init_tasking();
+	
+	__asm__ __volatile__ ("sti");
 
 	for(;;);
 }

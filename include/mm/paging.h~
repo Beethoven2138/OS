@@ -16,6 +16,4 @@ void handle_page_fault(struct regs *r);
 extern void loadPageDir(unsigned int *);
 extern void enablePaging();
 
-//TODO: add_page() function so that it automatically updates the page dir and tables
-
 #endif
