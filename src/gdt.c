@@ -1,6 +1,6 @@
 #include <gdt.h>
 
-#define ENTRY_COUNT 3
+#define ENTRY_COUNT 5
 
 struct gdt_entry gdt[ENTRY_COUNT];
 struct gdt_ptr gp;
@@ -27,21 +27,15 @@ void gdt_install()
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
     gp.base = (uint32_t)&gdt;
 
-    /* Our NULL descriptor */
+    /* NULL descriptor */
     gdt_set_gate(0, 0, 0, 0, 0);
 
-    /* The second entry is our Code Segment. The base address
-    *  is 0, the limit is 4GBytes, it uses 4KByte granularity,
-    *  uses 32-bit opcodes, and is a Code Segment descriptor.
-    *  Please check the table above in the tutorial in order
-    *  to see exactly what each value means */
+
     gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
 
-    /* The third entry is our Data Segment. It's EXACTLY the
-    *  same as our code segment, but the descriptor type in
-    *  this entry's access byte says it's a Data Segment */
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
-    /* Flush out the old GDT and install the new changes! */
+	gdt_set_gate(3, 0, 0xFFFFF, 
+	
     gdt_flush();
 }
